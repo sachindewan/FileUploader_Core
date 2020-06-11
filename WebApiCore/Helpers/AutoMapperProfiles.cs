@@ -9,8 +9,11 @@ namespace WebApiCore.Helpers
         public AutoMapperProfiles()
         {
             CreateMap<FileDescriptionDto, FileDescription>();
-            CreateMap<FileDescriptionDto, ImportFileDescription>();
             CreateMap<FileDescription, FileDescriptionForResultDto>().ForMember(dest => dest.Name, src => src.MapFrom(opt => opt.FileName));
+
+            CreateMap<FileDescriptionDto, ImportFileDescription>();
+            CreateMap<ImportFileDescription, FileDescriptionForResultDto>().ForMember(dest => dest.Name, src => src.MapFrom(opt => opt.FileName));
+
             CreateMap<UserForRegisterDto, User>().ReverseMap();
             CreateMap<User, UserForListDto>().ForMember(dest => dest.Age, src => src.MapFrom(opt => opt.DateOfBirth.CalculateAge())).ReverseMap();
         }

@@ -37,8 +37,26 @@ namespace WebApiCore.Controllers
         {
             var filedesFromRepo = await _repository.GetFileDescription(id);
 
-            var photo = _mapper.Map<FileDescriptionForResultDto>(filedesFromRepo);
-            return Ok(photo);
+            var fileDescToReturn = _mapper.Map<FileDescriptionForResultDto>(filedesFromRepo);
+            return Ok(fileDescToReturn);
+        }
+
+        [HttpGet("{id}", Name = "GetImportedFile")]
+        public async Task<IActionResult> GetImportedFileDescription(int id)
+        {
+            var filedesFromRepo = await _repository.GetFileDescription(id);
+
+            var fileDescToReturn = _mapper.Map<FileDescriptionForResultDto>(filedesFromRepo);
+            return Ok(fileDescToReturn);
+        }
+
+        [HttpGet("getallimportedfile")]
+        public async Task<IActionResult> GetAllUsersImportedFileDescription(int userId)
+        {
+            var filedesFromRepo = await _repository.GetAllUserImportedFileDescription(userId);
+
+            var fileDescToReturn = _mapper.Map<IEnumerable<FileDescriptionForResultDto>>(filedesFromRepo);
+            return Ok(fileDescToReturn);
         }
 
         [HttpGet()]
@@ -46,13 +64,13 @@ namespace WebApiCore.Controllers
         {
             var filedesFromRepo = await _repository.GetAllUserFileDescription(userId);
 
-            var photo = _mapper.Map<IEnumerable<FileDescriptionForResultDto>>(filedesFromRepo);
-            return Ok(photo);
+            var fileDescToReturn = _mapper.Map<IEnumerable<FileDescriptionForResultDto>>(filedesFromRepo);
+            return Ok(fileDescToReturn);
         }
 
 
         [HttpDelete("deleteuserfile/{fileId}")]
-        public async Task<IActionResult> GetAllUsersFileDescription(int userId,int fileId)
+        public async Task<IActionResult> DeleteFileAsync(int userId,int fileId)
         {
             var filedesFromRepo = await _repository.GetFileDescription(fileId);
             if (filedesFromRepo == null) return NotFound();
@@ -156,7 +174,9 @@ namespace WebApiCore.Controllers
                        _repository.AddRange<AnonymousUser>(records);
                         if (await _repository.SaveAll())
                         {
-                            return Ok("data has been imported successfully");
+                            var fileForReturn = _mapper.Map<FileDescriptionForResultDto>(importedFiledescFromRepo);
+                            return CreatedAtRoute("GetFileDesc", new { userId = importedFiledescFromRepo.UserId, id = importedFiledescFromRepo.Id }, fileForReturn);
+
                         }
                     }
 

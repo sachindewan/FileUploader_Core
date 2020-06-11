@@ -27,4 +27,9 @@ export class UserService {
       this.baseUrl + userId + '/fileuploader/deleteuserfile/' + fileId
     );
   }
+  getAllimportedFileDesc(userId): Observable<Filedescription[]> {
+    return this.http.get<Filedescription[]>(
+      this.baseUrl + userId + '/fileuploader/getallimportedfile'
+    );
+  }
 }

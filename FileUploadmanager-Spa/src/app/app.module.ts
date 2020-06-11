@@ -24,6 +24,7 @@ import { UserManagementComponent } from './admin/user-management/user-management
 import { RolesModelComponent } from './admin/roles-model/roles-model.component';
 import { FileUploaderComponent } from './fileuploader/file-uploader/file-uploader.component';
 import { FileImportComponent } from './fileuploader/file-import/file-import/file-import.component';
+import { ImportedfileListResolver } from './_resolver/importedfile-list-resolver';
 
 export function tokenGenerator() {
   return localStorage.getItem('token');
@@ -64,7 +65,7 @@ export function tokenGenerator() {
       },
     }),
   ],
-  providers: [ErrorInterceptorProvider],
+  providers: [ErrorInterceptorProvider, ImportedfileListResolver],
   bootstrap: [AppComponent],
   entryComponents: [RolesModelComponent],
 })

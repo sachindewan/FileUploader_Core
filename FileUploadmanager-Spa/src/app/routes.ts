@@ -6,6 +6,7 @@ import { AuthGuard } from './_guards/auth.guard';
 import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
 import { FileUploaderComponent } from './fileuploader/file-uploader/file-uploader.component';
 import { FileImportComponent } from './fileuploader/file-import/file-import/file-import.component';
+import { ImportedfileListResolver } from './_resolver/importedfile-list-resolver';
 
 export const routes: Routes = [
   {
@@ -24,6 +25,7 @@ export const routes: Routes = [
       {
         path: 'fileimport',
         component: FileImportComponent,
+        resolve: { files: ImportedfileListResolver },
       },
       {
         path: 'admin',

@@ -4,6 +4,8 @@ import { FileUploader } from 'ng2-file-upload';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { AuthService } from 'src/app/_services/auth.service';
 import { UserService } from 'src/app/_services/user.service';
+import { Filedescription } from 'src/app/_models/filedescription';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-file-import',
@@ -14,13 +16,18 @@ export class FileImportComponent implements OnInit {
   uploader: FileUploader;
   hasBaseDropZoneOver = true;
   baseUrl = environment.baseUrl;
+  files: Filedescription[] = [];
   constructor(
     private authService: AuthService,
     private userService: UserService,
-    private alertify: AlertifyService
+    private alertify: AlertifyService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
+    this.route.data.subscribe((data) => {
+      this.files = data['files'];
+    });
     this.initializeUploader();
   }
   public fileOverBase(e: any): void {
@@ -46,6 +53,7 @@ export class FileImportComponent implements OnInit {
 
     this.uploader.onSuccessItem = (item, response, status, header) => {
       if (response) {
+        this.files.push(JSON.parse(response));
         this.alertify.success('file has been uploaded sucessfully');
       }
     };
