@@ -1,0 +1,67 @@
+<nav class="navbar navbar-expand-md navbar-dark bg-primary">
+  <div class="container">
+    <a class="navbar-brand" [routerLink]="['/home']">File Uplaod Manager</a>
+    <ul *ngIf="loggedIn()" class="navbar-nav mr-auto">
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" [routerLink]="['/fileupload']">Upload Files</a>
+      </li>
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" [routerLink]="['/fileimport']">Import Files</a>
+      </li>
+      <!-- *appHasRole="['Admin', 'Moderator']" -->
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['/admin']">Manage Files</a>
+      </li>
+    </ul>
+
+    <div *ngIf="loggedIn()" class="dropdown" dropdown>
+      <span>
+        <img src="{{ photoUrl || '../../../../assets/user.png' }}" alt="" />
+      </span>
+      <a class="dropdown-toggle text-light" dropdownToggle>
+        Welcome {{ authService.decodedToken?.unique_name | titlecase }}
+      </a>
+      <div class="dropdown-menu" *dropdownMenu>
+        <a class="dropdown-item" [routerLink]="['/memberProfile/edit']"
+          ><i class="fa fa-user"></i>Edit Profile</a
+        >
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" (click)="logout()"
+          ><i class="fa fa-sign-out"></i>Logout</a
+        >
+      </div>
+    </div>
+
+    <form
+      *ngIf="!loggedIn()"
+      #loginForm="ngForm"
+      class="form-inline my-2 my-lg-0"
+      (ngSubmit)="login()"
+    >
+      <input
+        class="form-control mr-sm-2"
+        type="text"
+        placeholder="UserName"
+        name="username"
+        required
+        [(ngModel)]="model.username"
+      />
+      <input
+        class="form-control mr-sm-2"
+        type="password"
+        placeholder="Password"
+        name="password"
+        required
+        [(ngModel)]="model.password"
+      />
+
+      <button
+        class="btn btn-success my-2 my-sm-0"
+        [disabled]="loginForm.invalid"
+        type="submit"
+      >
+        Log In
+      </button>
+    </form>
+  </div>
+</nav>
