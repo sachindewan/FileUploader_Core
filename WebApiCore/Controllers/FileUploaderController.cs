@@ -5,11 +5,14 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 using AutoMapper;
 using CsvHelper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using WebApiCore.Data.Repository;
+using WebApiCore.DataAccess.Data;
 using WebApiCore.Dtos;
 using WebApiCore.Helpers;
 using WebApiCore.Models;
@@ -142,56 +145,69 @@ namespace WebApiCore.Controllers
         public async Task<ActionResult> UploadCsv(int userId, [FromForm] FileDescriptionDto fileDescriptionDto)
         {
             List<AnonymousUser> anonymousUsers = new List<AnonymousUser>();
-            try
+            var serviceDbContext = HttpContext.RequestServices.GetRequiredService<ApplicationDbContext>();
+            long fileSize = 0;
+            using(var transaction = serviceDbContext.Database.BeginTransaction())
             {
-                using (var fileStream = fileDescriptionDto.File.OpenReadStream())
-                using (var reader = new StreamReader(fileStream, Encoding.Default))
-                using (var csv = new CsvReader(reader, System.Globalization.CultureInfo.CurrentCulture))
+                try
                 {
-                    //getting filename and contentType
-                    var fileName = ContentDispositionHeaderValue.Parse(fileDescriptionDto.File?.ContentDisposition).FileName.ToString().Trim('"');
-                    fileDescriptionDto.FileName = fileDescriptionDto.Description = fileName;
-                    fileDescriptionDto.ContentType = fileDescriptionDto.File?.ContentType;
-
-                    //mapping csv file to class table schema
-                    csv.Configuration.RegisterClassMap<UserDtoCsvMap>();
-                    var records = csv.GetRecords<AnonymousUser>().ToList();
-
-                    //adding import file 
-                    var userFromRepo = await _repository.GetUser(userId);
-                    var importFileMap = _mapper.Map<ImportFileDescription>(fileDescriptionDto);
-                    userFromRepo.ImportFileDescriptions.Add(importFileMap);
-
-                    if (await _repository.SaveAll())
+                    using (var fileStream = fileDescriptionDto.File.OpenReadStream())
+                    using (var reader = new StreamReader(fileStream, Encoding.Default))
+                    using (var csv = new CsvReader(reader, System.Globalization.CultureInfo.CurrentCulture))
                     {
-                        //import file processing...
-                        var importedFiledescFromRepo = await _repository.GetImportedFileDescription(importFileMap.Id);
-                        foreach(var record in records)
-                        {
-                            record.ImportFileDescription = importedFiledescFromRepo;
-                        }
-                        anonymousUsers = records;
-                       _repository.AddRange<AnonymousUser>(records);
+                        //getting filename and contentType
+                        var fileName = ContentDispositionHeaderValue.Parse(fileDescriptionDto.File?.ContentDisposition).FileName.ToString().Trim('"');
+                        fileDescriptionDto.FileName = fileDescriptionDto.Description = fileName;
+                        fileDescriptionDto.ContentType = fileDescriptionDto.File?.ContentType;
+                        fileSize = fileDescriptionDto.File.Length;
+                        //mapping csv file to class table schema
+                        csv.Configuration.RegisterClassMap<UserDtoCsvMap>();
+                        var records = csv.GetRecords<AnonymousUser>().ToList();
+
+                        //adding import file 
+                        var userFromRepo = await _repository.GetUser(userId);
+                        var importFileMap = _mapper.Map<ImportFileDescription>(fileDescriptionDto);
+                        userFromRepo.ImportFileDescriptions.Add(importFileMap);
+
                         if (await _repository.SaveAll())
                         {
-                            var fileForReturn = _mapper.Map<FileDescriptionForResultDto>(importedFiledescFromRepo);
-                            return CreatedAtRoute("GetFileDesc", new { userId = importedFiledescFromRepo.UserId, id = importedFiledescFromRepo.Id }, fileForReturn);
+                            //import file processing...
+                            var importedFiledescFromRepo = await _repository.GetImportedFileDescription(importFileMap.Id);
+                            foreach (var record in records)
+                            {
+                                record.ImportFileDescription = importedFiledescFromRepo;
+                            }
+                            anonymousUsers = records;
+                            _repository.AddFileRange<AnonymousUser>(records, fileSize);
+                            if (await _repository.SaveAll())
+                            {
+                                var fileForReturn = _mapper.Map<FileDescriptionForResultDto>(importedFiledescFromRepo);
+                                await transaction.CommitAsync();
+                                return CreatedAtRoute("GetFileDesc", new { userId = importedFiledescFromRepo.UserId, id = importedFiledescFromRepo.Id }, fileForReturn);
 
+                            }
                         }
+
+                    }
+                }
+                catch (Exception ex) when (ex.Message.Equals("The operation has timed out."))
+                {
+                    // [To Do]implement retry mechanism if fails to send the stream
+                    var retryResult = await RetryHelper.RetryOnExceptionAsync(SD.Retry, TimeSpan.FromSeconds(10), async () =>
+                    {
+                        return await SaveRetry(anonymousUsers);
+                    });
+                    if (retryResult) {
+                        await transaction.CommitAsync();
+                        return Ok("data has been imported via retry mechanism");
                     }
 
+                    await transaction.RollbackAsync();
+                    return BadRequest(ex.Message);
                 }
+                await transaction.RollbackAsync();
             }
-            catch (Exception ex) when (ex.Message.Equals("The operation has timed out."))
-            {
-                // [To Do]implement retry mechanism if fails to send the stream
-                var retryResult = await RetryHelper.RetryOnExceptionAsync(SD.Retry, TimeSpan.FromSeconds(10), async () =>
-                  {
-                      return await SaveRetry(anonymousUsers);
-                  });
-                if (retryResult) return Ok("data has been imported via retry mechanism");
-                return BadRequest(ex.Message);
-            }
+            
             return BadRequest("Error occured while dumping the data into data base");
         }
 

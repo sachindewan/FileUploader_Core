@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApiCore.DataAccess.Data;
+using WebApiCore.Helpers;
 using WebApiCore.Models;
 
 namespace WebApiCore.Data.Repository
@@ -23,8 +24,17 @@ namespace WebApiCore.Data.Repository
 
         public void AddRange<T>(IEnumerable<T> entity) where T : class
         {
+            _applicationDbContext.AddRange(entity);
+        }
+
+        public void AddFileRange<T>(IEnumerable<T> entity,long fileSize) where T : class
+        {
+            FileSize size = fileSize.MapFileSize();
             //set command timeout if having heavy data to import
-            _applicationDbContext.Database.SetCommandTimeout((int)TimeSpan.FromMinutes(5).TotalSeconds);
+            if (size != FileSize.Normal)
+            {
+                _applicationDbContext.Database.SetCommandTimeout((int)TimeSpan.FromMinutes(SD.FileSizeStore[size]).TotalSeconds);
+            }
             _applicationDbContext.AddRange(entity);
         }
 

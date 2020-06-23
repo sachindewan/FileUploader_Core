@@ -73,8 +73,6 @@ export class RegisterComponent implements OnInit {
         }
       );
     }
-
-    console.log(this.registerForm.value);
   }
   passwordMatchValidator(g: FormGroup) {
     return g.get('password').value === g.get('confirmPassword').value

@@ -29,6 +29,8 @@ namespace DatingApp.API.Controllers
 
         [Authorize(Policy = SD.AdminOnly)]
         [HttpGet("userWithRoles")]
+        [ProducesResponseType(200,Type =typeof(List<Object>))]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> GetUserWithRoles()
         {
             var userWithRoles = await _context.Users.OrderBy(x => x.UserName).Select(user => new
@@ -42,8 +44,10 @@ namespace DatingApp.API.Controllers
 
         }
 
-        [Authorize(Policy = SD.Admin)]
+        [Authorize(Policy = SD.AdminOnly)]
         [HttpPost("editRoles/{username}")]
+        [ProducesResponseType(200, Type = typeof(IList<string>))]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> EditRoles(string username, RoleEditDto editedRoles)
         {
             var resultUser = await _userManager.FindByNameAsync(username);

@@ -1,0 +1,70 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/auth/login",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "61541"
+        }
+      ],
+      "UpstreamPathTemplate": "/login",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DangerousAcceptAnyServerCertificateValidator": true
+
+    },
+    {
+      "DownstreamPathTemplate": "/api/auth/register",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "61541"
+        }
+      ],
+      "UpstreamPathtemplate": "/register",
+      "UpstreamHttpMethod": [ "Post" ]
+
+    },
+    {
+      "DownstreamPathTemplate": "/api/admin/userWithRoles",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "61541"
+        }
+      ],
+      "UpstreamPathtemplate": "/userWithRoles",
+      "UpstreamHttpMethod": [ "Get" ]
+
+    },
+    {
+      "DownstreamPathTemplate": "/api/admin/editRoles/{username}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "61541"
+        }
+      ],
+      "UpstreamPathtemplate": "/editRoles",
+      "UpstreamHttpMethod": [ "Post" ]
+
+    },
+    {
+      "DownstreamPathTemplate": "/api/user/{userId}/fileuploader/deleteuserfile/{fileId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "61541"
+        }
+      ],
+      "UpstreamPathtemplate": "/deletFile",
+      "UpstreamHttpMethod": [ "Delete" ]
+
+    }
+  ]
+}

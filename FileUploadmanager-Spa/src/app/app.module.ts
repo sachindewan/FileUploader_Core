@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, Pipe } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
@@ -10,6 +10,7 @@ import { JwtModule } from '@auth0/angular-jwt';
 import { FileUploadModule } from 'ng2-file-upload';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
@@ -25,6 +26,8 @@ import { RolesModelComponent } from './admin/roles-model/roles-model.component';
 import { FileUploaderComponent } from './fileuploader/file-uploader/file-uploader.component';
 import { FileImportComponent } from './fileuploader/file-import/file-import/file-import.component';
 import { ImportedfileListResolver } from './_resolver/importedfile-list-resolver';
+import { LoaderComponent } from './loader/loader/loader.component';
+import { LoaderInterceptorService } from './_services/loader-interceptor.service';
 
 export function tokenGenerator() {
   return localStorage.getItem('token');
@@ -43,6 +46,7 @@ export function tokenGenerator() {
     ControlMessageComponent,
     FileUploaderComponent,
     FileImportComponent,
+    LoaderComponent,
   ],
   imports: [
     BrowserModule,
@@ -57,6 +61,7 @@ export function tokenGenerator() {
     RoutesModule,
     ModalModule.forRoot(),
     FileUploadModule,
+    NgxSpinnerModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGenerator,
@@ -65,7 +70,15 @@ export function tokenGenerator() {
       },
     }),
   ],
-  providers: [ErrorInterceptorProvider, ImportedfileListResolver],
+  providers: [
+    ErrorInterceptorProvider,
+    ImportedfileListResolver,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoaderInterceptorService,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
   entryComponents: [RolesModelComponent],
 })

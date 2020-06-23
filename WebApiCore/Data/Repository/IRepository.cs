@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using WebApiCore.Helpers;
 using WebApiCore.Models;
 
 namespace WebApiCore.Data.Repository
@@ -8,6 +9,7 @@ namespace WebApiCore.Data.Repository
     {
         void Add<T>(T entity) where T : class;
         void AddRange<T>(IEnumerable<T> entity) where T : class;
+        public void AddFileRange<T>(IEnumerable<T> entity, long fileSize) where T : class;
         void Delete<T>(T entity) where T : class;
 
         Task<bool> SaveAll();

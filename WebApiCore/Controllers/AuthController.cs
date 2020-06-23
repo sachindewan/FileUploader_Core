@@ -39,6 +39,8 @@ namespace WebApiCore.Controllers
         }
 
         [HttpPost("login")]
+        [ProducesResponseType(200, Type = typeof(object))]
+        [ProducesResponseType(401)]
         public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
         {
             var user = await _userManager.FindByNameAsync(userForLoginDto.UserName);
@@ -58,6 +60,8 @@ namespace WebApiCore.Controllers
         }
 
         [HttpPost("register")]
+        [ProducesResponseType(201, Type = typeof(UserForRegisterDto))]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> Register(UserForRegisterDto userForLoginDto)
         {
             var userToCreate = _mapper.Map<User>(userForLoginDto);

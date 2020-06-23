@@ -1,3 +1,7 @@
+using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -93,6 +97,14 @@ namespace WebApiCore
             services.AddScoped<IRepository, Repository>();
             services.AddScoped<AutherizeCurrentUserFilter>();
             services.AddScoped<FileValidationFilter>();
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("FileUploadAPISpec", new Microsoft.OpenApi.Models.OpenApiInfo() { Title = "FileUpload API", Version = "1.0" });
+                options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+                var xmlCommentsFile = $"{ Assembly.GetExecutingAssembly().GetName().Name}" + ".xml";
+                var xmlCommentsFilePath = Path.Combine(AppContext.BaseDirectory, xmlCommentsFile);
+                options.IncludeXmlComments(xmlCommentsFilePath);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -103,6 +115,12 @@ namespace WebApiCore
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("swagger/FileUploadAPISpec/swagger.json", "FileUpload API");
+                options.RoutePrefix = "";
+            });
             app.UseRouting();
 
             //adding the service to support CORS request

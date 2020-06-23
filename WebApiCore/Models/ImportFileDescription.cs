@@ -15,6 +15,5 @@ namespace WebApiCore.Models
         public DateTime CreatedTimestamp { get; set; }
         public string ContentType { get; set; }
         public virtual ICollection<AnonymousUser> AnonymousUsers { get; set; }
-
     }
 }

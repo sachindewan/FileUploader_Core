@@ -7,16 +7,7 @@ namespace WebApiCore.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "FileId",
-                table: "AnonymousUsers",
-                nullable: false,
-                defaultValue: 0);
-
-            migrationBuilder.AddColumn<int>(
-                name: "ImportFileDescriptionId",
-                table: "AnonymousUsers",
-                nullable: true);
+           
 
             migrationBuilder.CreateTable(
                 name: "ImportFileDescriptions",
@@ -38,7 +29,7 @@ namespace WebApiCore.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -57,7 +48,7 @@ namespace WebApiCore.Migrations
                 column: "ImportFileDescriptionId",
                 principalTable: "ImportFileDescriptions",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
+                onDelete: ReferentialAction.Cascade);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

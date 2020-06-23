@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WebApiCore</name>
+    </assembly>
+    <members>
+        <member name="M:WebApiCore.Helpers.FormFileExtention.SaveAsAsync(Microsoft.AspNetCore.Http.IFormFile,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously saves the contents of an uploaded file.
+            </summary>
+            <param name="formFile">The <see cref="T:Microsoft.AspNetCore.Http.IFormFile"/>.</param>
+            <param name="filename">The name of the file to create.</param>
+        </member>
+    </members>
+</doc>
