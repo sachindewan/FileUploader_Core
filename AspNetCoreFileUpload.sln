@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.30128.74
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiCore", "WebApiCore\WebApiCore.csproj", "{48DDBAEA-1B45-44FF-9609-82D465989949}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APIGateWay", "APIGateWay\APIGateWay.csproj", "{4085C549-619A-45F6-BA98-C009DAC019CC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIGateWay", "APIGateWay\APIGateWay.csproj", "{4085C549-619A-45F6-BA98-C009DAC019CC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderMicroService", "OrderMicroService\OrderMicroService.csproj", "{20ADB468-73B2-40B6-A7F6-1CB8A2D3AD02}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{4085C549-619A-45F6-BA98-C009DAC019CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4085C549-619A-45F6-BA98-C009DAC019CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4085C549-619A-45F6-BA98-C009DAC019CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20ADB468-73B2-40B6-A7F6-1CB8A2D3AD02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20ADB468-73B2-40B6-A7F6-1CB8A2D3AD02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20ADB468-73B2-40B6-A7F6-1CB8A2D3AD02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20ADB468-73B2-40B6-A7F6-1CB8A2D3AD02}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
