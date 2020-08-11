@@ -10,7 +10,7 @@ using WebApiCore.DataAccess.Data;
 namespace WebApiCore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200611101655_remove_flawedidfrom_anonymoususertable")]
+    [Migration("20200724122626_remove_flawedidfrom_anonymoususertable")]
     partial class remove_flawedidfrom_anonymoususertable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

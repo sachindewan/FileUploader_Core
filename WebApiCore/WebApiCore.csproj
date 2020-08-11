@@ -10,6 +10,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200611101655_remove_flawedidfrom_anonymoususertable.cs" />
+    <Compile Remove="Migrations\20200611101655_remove_flawedidfrom_anonymoususertable.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="CsvHelper" Version="15.0.5" />

@@ -28,6 +28,8 @@ import { FileImportComponent } from './fileuploader/file-import/file-import/file
 import { ImportedfileListResolver } from './_resolver/importedfile-list-resolver';
 import { LoaderComponent } from './loader/loader/loader.component';
 import { LoaderInterceptorService } from './_services/loader-interceptor.service';
+import { AdminRouteModule } from './admin/admin-route-module';
+import { AdminPanelModule } from './admin/admin-panel.module';
 
 export function tokenGenerator() {
   return localStorage.getItem('token');
@@ -39,9 +41,9 @@ export function tokenGenerator() {
     HomeComponent,
     NavComponent,
     RegisterComponent,
-    AdminPanelComponent,
+    //AdminPanelComponent,
     HasroleDirective,
-    UserManagementComponent,
+    //UserManagementComponent,
     RolesModelComponent,
     ControlMessageComponent,
     FileUploaderComponent,

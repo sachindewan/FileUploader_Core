@@ -45,7 +45,8 @@ namespace WebApiCore
         }
         public void ConfigureProductionServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(x => {
+            services.AddDbContext<ApplicationDbContext>(x =>
+            {
                 x.UseLazyLoadingProxies();
                 x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
@@ -104,7 +105,7 @@ namespace WebApiCore
                 var xmlCommentsFile = $"{ Assembly.GetExecutingAssembly().GetName().Name}" + ".xml";
                 var xmlCommentsFilePath = Path.Combine(AppContext.BaseDirectory, xmlCommentsFile);
                 options.IncludeXmlComments(xmlCommentsFilePath);
-            });
+            });  
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
